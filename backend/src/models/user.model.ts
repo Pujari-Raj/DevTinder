@@ -1,4 +1,5 @@
 import { Document, model, models, Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 export interface User extends Document {
   name: string;
@@ -6,9 +7,9 @@ export interface User extends Document {
   password: string;
   age: number;
   gender: string;
-  about: string;
-  skills: string[];
-  photoUrl: string;
+  about?: string;
+  skills?: string[];
+  photoUrl?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +23,7 @@ const userSchema: Schema<User> = new Schema(
     email: {
       type: String,
       required: true,
+      index: true,
     },
     password: {
       type: String,
@@ -52,5 +54,10 @@ const userSchema: Schema<User> = new Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 10);
+});
 
 export const UserModel = models.User || model<User>("User", userSchema);
