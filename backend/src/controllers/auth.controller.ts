@@ -1,0 +1,84 @@
+import { NextFunction, Response } from "express";
+import { ApiResponse } from "../@types/type";
+import { AsyncHandler } from "../utils/handlers";
+import { UserModel } from "../models/user.model";
+
+// signup route
+const signUp = AsyncHandler(
+  async (req, res: Response<ApiResponse>, next: NextFunction) => {
+    try {
+      const { name, email, password, age, gender } = req.body;
+
+      // 1. checking if user exists
+      const existingUser = await UserModel.findOne({ email });
+
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "User Already Exists",
+        });
+      }
+
+      // 2. creating new user
+      const createNewUser = await UserModel.create({
+        name,
+        email,
+        password,
+        age,
+        gender,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "User registered successfully",
+        data: createNewUser,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// login route
+const login = AsyncHandler(
+  async (req, res: Response<ApiResponse>, next: NextFunction) => {
+    try {
+      const { email, password } = req.body;
+
+      //1. checking if userExists
+      const userExists = await UserModel.findOne({ email }).select("+password");
+
+      if (!userExists) {
+        return res.status(401).json({
+          success: false,
+          message: "User Does not exist",
+        });
+      }
+
+      // 2. Validating password
+
+      const isValidPassword = await userExists.validatePassword(password);
+
+      if (!isValidPassword) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid Credentials",
+        });
+      }
+
+      // 3. successful login
+      res.status(200).json({
+        success: true,
+        message: "Login Successful",
+        data: {
+          name: userExists.name,
+          email: userExists.email,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+export { signUp, login };

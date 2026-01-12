@@ -12,6 +12,7 @@ export interface User extends Document {
   photoUrl?: string;
   createdAt: Date;
   updatedAt: Date;
+  validatePassword: (password: string) => Promise<Boolean>;
 }
 
 const userSchema: Schema<User> = new Schema(
@@ -55,9 +56,15 @@ const userSchema: Schema<User> = new Schema(
   }
 );
 
+// Hash password before saving
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
+
+// Validating pasword 
+userSchema.methods.validatePassword = async function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
 
 export const UserModel = models.User || model<User>("User", userSchema);
