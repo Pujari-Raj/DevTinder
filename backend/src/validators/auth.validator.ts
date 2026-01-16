@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { emailSchema, passwordSchema } from "./common.schema";
 
 export const signUpSchema = yup.object({
   name: yup
@@ -8,26 +9,9 @@ export const signUpSchema = yup.object({
     .min(6, "Name must be at least 6 characters")
     .max(50, "Name must not exceed 50 characters"),
 
-  email: yup
-    .string()
-    .trim()
-    .required("Name Field is Reuired")
-    .test("is-email-valid", "Email is not valid", (value) => {
-      if (!value) return false;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(value);
-    }),
+  email: emailSchema,
 
-  password: yup
-    .string()
-    .trim()
-    .required("Password Field is Required")
-    .min(8, "Password must be at least 8 characters")
-    .max(20, "Password must not exceed 20 characters")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    ),
+  password: passwordSchema,
 
   age: yup
     .number()
@@ -38,8 +22,17 @@ export const signUpSchema = yup.object({
   gender: yup
     .string()
     .trim()
-    .required("Please provide the gender")
+    .required("Gender Field is Required")
     .oneOf(["male", "female"]),
 });
 
 export type SignUpSchemaType = yup.InferType<typeof signUpSchema>;
+
+// login
+
+export const LoginSchema = yup.object({
+    email: emailSchema,
+    password: passwordSchema,
+});
+
+export type LoginSchemaType = yup.InferType<typeof LoginSchema>;
