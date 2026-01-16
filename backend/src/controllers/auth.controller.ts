@@ -2,12 +2,16 @@ import { NextFunction, Response } from "express";
 import { ApiResponse } from "../@types/type";
 import { AsyncHandler } from "../utils/handlers";
 import { UserModel } from "../models/user.model";
+import { SignUpSchemaType, signUpSchema } from "../validators/auth.validator";
 
 // signup route
 const signUp = AsyncHandler(
   async (req, res: Response<ApiResponse>, next: NextFunction) => {
     try {
-      const { name, email, password, age, gender } = req.body;
+      const { name, email, password, age, gender } = await signUpSchema.validate(req.body as SignUpSchemaType, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
 
       // 1. checking if user exists
       const existingUser = await UserModel.findOne({ email });
