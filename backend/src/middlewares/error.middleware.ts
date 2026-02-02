@@ -10,6 +10,7 @@ export const errorMiddleware: ErrorRequestHandler = (
 ) => {
   // Yup Validation error
   if (err instanceof ValidationError) {
+    console.log("Yup Validation Error Middleware");
     return res.status(400).json({
       success: false,
       errors: err?.errors,
