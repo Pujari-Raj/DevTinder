@@ -15,4 +15,5 @@ export const env = {
     PORT : Number(process.env.PORT) || 8080,
     MONGODB_URL : required("MONGODB_URL"),
     DB_NAME : required("DB_NAME"),
+    JWT_SECRET : required("JWT_SECRET"),
 }

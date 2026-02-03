@@ -1,6 +1,7 @@
 import { Document, model, models, Schema } from "mongoose";
 import bcrypt from "bcrypt";
-
+import jwt from 'jsonwebtoken';
+import {env} from '../config/config'
 export interface User extends Document {
   name: string;
   email: string;
@@ -13,6 +14,7 @@ export interface User extends Document {
   createdAt: Date;
   updatedAt: Date;
   validatePassword: (password: string) => Promise<Boolean>;
+  generateJWT: () => string;
 }
 
 const userSchema: Schema<User> = new Schema(
@@ -66,5 +68,18 @@ userSchema.pre("save", async function () {
 userSchema.methods.validatePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
+
+// Function for generating JWT Token
+userSchema.methods.generateJWT = function () {
+  return jwt.sign(
+    {
+      _id: this._id
+    },
+      env.JWT_SECRET,
+    {
+      issuer: "DevTinder", expiresIn : "1d"
+    }
+  )
+}
 
 export const UserModel = models.User || model<User>("User", userSchema);

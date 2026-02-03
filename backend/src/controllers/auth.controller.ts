@@ -69,6 +69,7 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 
   const isValidPassword = await userExists.validatePassword(password);
 
+
   if (!isValidPassword) {
     return res.status(401).json({
       success: false,
@@ -76,8 +77,20 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     });
   }
 
-  // 3. successful login
-  res.status(200).json({
+  // if userExists and password is valid, then generating token
+
+  const token = userExists.generateJWT();
+
+  // 3. setting token as cookie with success code
+
+  res.cookie("devTinderToken", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 1 * 24 * 60 * 60 * 1000
+  })
+  
+  .status(201).json({
     success: true,
     message: "Login Successful",
     data: {
