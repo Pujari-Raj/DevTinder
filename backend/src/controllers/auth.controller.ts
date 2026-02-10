@@ -73,7 +73,7 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
   if (!isValidPassword) {
     return res.status(401).json({
       success: false,
-      message: "Invalid Credentials",
+      message: "Invalid Email or Password",
     });
   }
 
