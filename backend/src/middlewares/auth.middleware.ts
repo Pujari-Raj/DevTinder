@@ -4,7 +4,7 @@ import { UserModel } from "../models/user.model";
 
 export const userAuth = AsyncHandler(async (req, res, next) => {
     // getting token from cookies
-
+  
     const token = req?.cookies?.devTinderToken;
 
     if (!token) {
