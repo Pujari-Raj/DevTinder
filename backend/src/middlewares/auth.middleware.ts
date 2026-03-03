@@ -14,7 +14,7 @@ export const userAuth = AsyncHandler(async (req, res, next) => {
         })
     }
 
-    // if token is avaiable then check if user is available
+    //checking if token is available
     const decodedUser = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
 
     // checking if user is there in DB
