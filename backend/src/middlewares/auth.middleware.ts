@@ -1,32 +1,30 @@
-import { AsyncHandler } from "../utils/handlers";
+import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 import jwt from 'jsonwebtoken'
 import { UserModel } from "../models/user.model";
+import {env} from '../config/config'
 
-export const userAuth = AsyncHandler(async (req, res, next) => {
-    // getting token from cookies
-  
-    const token = req?.cookies?.devTinderToken;
+export const userAuth = AsyncHandler(async (req, _res, next) => {
+    // Get token from request cookies
+    const { devTinderToken } = req.cookies;
 
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: "User Unauthorized"
-        })
+    // Validation of token
+    if (!devTinderToken) {
+        throw new ErrorHandler("Please login to continue", 401);
     }
 
-    //checking if token is available
-    const decodedUser = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    // Decode the token
+    const decodedPayload = jwt.verify(devTinderToken, env.JWT_SECRET as string) as { _id: string };
 
-    // checking if user is there in DB
-    const user = UserModel.findById(decodedUser?.id);
-
+    // Get the user details
+    const user = await UserModel.findById(decodedPayload._id);
     if (!user) {
-        return res.status(401).json({
-            success: false,
-            message: 'User Not Found'
-        })
+        throw new ErrorHandler("User does not exists", 404);
     }
 
-    (req as any).user = user;
+    // Pass the decoded payload and user details
+    req.decoded = decodedPayload;
+    req.user = user;
+
+    // Move to next handler function
     next();
 })

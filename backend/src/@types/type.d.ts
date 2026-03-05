@@ -4,3 +4,12 @@ export interface ApiResponse {
   data?: unknown;
   pagination?: unknown;
 }
+
+declare global {
+    namespace Express {
+        interface Request {
+            decoded: DecodedPayload;
+            user: User;
+        }
+    }
+}
