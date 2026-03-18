@@ -8,6 +8,7 @@ import authRouter from "./routes/auth.routes";
 
 const app = express();
 
+// test comment
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
