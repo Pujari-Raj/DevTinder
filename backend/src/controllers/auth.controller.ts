@@ -72,7 +72,6 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 
   const isValidPassword = await userExists.validatePassword(password);
 
-
   if (!isValidPassword) {
     return res.status(401).json({
       success: false,
@@ -86,21 +85,39 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 
   // 3. setting token as cookie with success code
 
-  res.cookie("devTinderToken", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none": "lax",
-    maxAge: 1 * 24 * 60 * 60 * 1000
-  })
-  
-  .status(200).json({
-    success: true,
-    message: "Login Successful",
-    data: {
-      name: userExists.name,
-      email: userExists.email,
-    },
-  });
+  res
+    .cookie("devTinderToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+    })
+
+    .status(200)
+    .json({
+      success: true,
+      message: "Login Successful",
+      data: {
+        name: userExists.name,
+        email: userExists.email,
+      },
+    });
 });
 
-export { signUp, login };
+// logout route
+
+const logout = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+  res
+    .clearCookie("devTinderToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    })
+    .status(200)
+    .json({
+      success: true,
+      message: "Logout Successful",
+    });
+});
+
+export { signUp, login, logout };
