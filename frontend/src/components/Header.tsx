@@ -34,13 +34,6 @@ export default function Header() {
               </Link>
             </li>
           </ul>
-          
-          <Link 
-            to="/login"
-            className="btn btn-sm bg-sky-500 hover:bg-sky-600 border-0 text-white font-semibold"
-          >
-            Sign In
-          </Link>
         </div>
       </nav>
     </header>
