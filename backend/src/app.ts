@@ -5,12 +5,15 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import { ErrorHandler } from "./utils/handlers";
 import { notfoundMiddleware } from "./middlewares/notfound.middleware";
 import authRouter from "./routes/auth.routes";
+import cors from 'cors';
+import { env } from "./config/config";
 
 const app = express();
 
 // test comment
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(cors({ origin: env?.FRONTEND_URL, credentials: true, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"] }));
 
 // Routes
 

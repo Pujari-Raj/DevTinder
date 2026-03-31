@@ -16,4 +16,5 @@ export const env = {
     MONGODB_URL : required("MONGODB_URL"),
     DB_NAME : required("DB_NAME"),
     JWT_SECRET : required("JWT_SECRET"),
+    FRONTEND_URL : required("FRONTEND_URL")
 }
