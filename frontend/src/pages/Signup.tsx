@@ -18,7 +18,7 @@ export default function Signup() {
     mode: "onChange"
   })
   
-  const { isloading, handleSignup } = useSignUp(reset);
+  const { isloading, handleSignup, error } = useSignUp(reset);
 
   // const onSubmit : SubmitHandler<SignupSchemaType> = (data) => console.log('data',data);
   // console.log("errors",errors);
@@ -39,6 +39,12 @@ export default function Signup() {
             <p className="text-gray-400 mb-6">
               Join us today! Please fill in your details.
             </p>
+
+            {error && (
+              <div className="alert alert-error bg-red-900 border border-red-700 text-red-100 mb-4">
+                <span>{error}</span>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Name Field */}
@@ -178,7 +184,7 @@ export default function Signup() {
                 disabled={!isValid || isloading}
                 className="btn w-full bg-sky-500 hover:bg-sky-600 border-0 text-white font-semibold mt-6"
               >
-                Sign Up
+                {isloading ? "Signing up..." : "Sign Up"}
               </button>
             </form>
 
