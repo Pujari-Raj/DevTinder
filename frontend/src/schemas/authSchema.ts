@@ -15,3 +15,10 @@ export const SignupSchema = yup.object({
 });
 
 export type SignupSchemaType = yup.InferType<typeof SignupSchema>;
+
+export const LoginSchema = yup.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export type LoginSchemaType = yup.InferType<typeof LoginSchema>;
