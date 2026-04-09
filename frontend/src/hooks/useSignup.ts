@@ -17,9 +17,12 @@ const useSignUp = (reset: UseFormReset<SignupSchemaType>) => {
       const response = await axiosInstance.post("/auth/signup", data);
       console.log("API Response:", response?.data);
       if (response?.data?.success) {
-        console.log("Signup successful:");
-        navigate("/login", { replace: true });
+        console.log("Signup successful - redirecting to login");
+        
+        // Signup successful but token is set on login endpoint only
+        // User must manually login to get the token
         reset();
+        navigate("/login", { replace: true });
       }
     } catch (err) {
       if (err instanceof AxiosError) {
