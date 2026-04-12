@@ -29,7 +29,7 @@ const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
         setUser(user);
         
         reset();
-        navigate("/", { replace: true });
+        navigate("/feed", { replace: true });
       }
     } catch (err) {
       if (err instanceof AxiosError) {
