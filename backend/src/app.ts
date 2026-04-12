@@ -7,10 +7,13 @@ import { notfoundMiddleware } from "./middlewares/notfound.middleware";
 import authRouter from "./routes/auth.routes";
 import cors from 'cors';
 import { env } from "./config/config";
+import userRouter from "./routes/user.routes"
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // test comment
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cors({ origin: env?.FRONTEND_URL, credentials: true, methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"] }));
@@ -19,6 +22,7 @@ app.use(cors({ origin: env?.FRONTEND_URL, credentials: true, methods: ["GET", "P
 
 app.use("/api/v1/health", healthRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter)
 
 //  test route
 // app.use((_req, _res, next) => {
