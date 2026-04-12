@@ -2,11 +2,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface User {
-  id: string;
+  // id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  // Add other user fields as per your backend response
+  name: string,
+  // will Add other user fields as per need
 }
 
 export interface AuthState {
@@ -35,12 +34,14 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
         }),
 
-      logout: () =>
+      logout: () => {
         set({
           user: null,
           isAuthenticated: false,
           isLoading: false,
         }),
+        localStorage.removeItem("devtinder_user_details");
+      },
 
       setLoading: (isLoading) => set({ isLoading }),
 
@@ -51,7 +52,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-store", // localStorage key
+      name: "devtinder_user_details", // localStorage key
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
