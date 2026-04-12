@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaCode } from "react-icons/fa";
 import { useAuthStore } from "../store/authStore";
+import UserDropdown from "./Profile/userDropdown";
 
 export default function Header() {
   const { isAuthenticated, user } = useAuthStore();
@@ -23,18 +24,8 @@ export default function Header() {
 
         <div className="flex-none gap-4">
           <ul className="menu menu-horizontal px-1 gap-2">
-            <li>
-              <Link
-                to="/"
-                className="text-gray-300 hover:text-white hover:bg-gray-900 transition rounded-lg"
-              >
-                Home
-              </Link>
-            </li>
             {isAuthenticated ? (
-              <li>
-                Welcome , {userName}
-              </li>
+              <UserDropdown userName={userName} photoUrl="" />
             ) : (
               <li>
                 <Link
