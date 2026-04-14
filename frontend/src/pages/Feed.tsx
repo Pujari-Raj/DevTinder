@@ -1,11 +1,95 @@
-import React from 'react'
+import { useState } from "react";
+import { useUserFeed } from "../hooks/useUserFeed";
+import UserCard from "../components/UserCard";
+import axiosInstance from "../utils/axiosInstance";
+import "./Feed.css";
 
 const Feed = () => {
-  return (
-    <div>
-        <p>will show list of users</p>
-    </div>
-  )
-}
+  const { users, isLoading, error, refetch } = useUserFeed({
+    page: 1,
+    limit: 10,
+  });
+  const [currentUserIndex, setCurrentUserIndex] = useState(0);
+  const [actionLoading, setActionLoading] = useState(false);
 
-export default Feed
+  const currentUser = users[currentUserIndex];
+
+  const handleIgnore = async (userId: string) => {
+    setActionLoading(true);
+    try {
+      const response = await axiosInstance.post(`/user/action/ignore/${userId}`);
+      if (response?.data?.success) {
+        moveToNextUser();
+      }
+    } catch (err) {
+      console.error("Ignore failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleInterested = async (userId: string) => {
+    setActionLoading(true);
+    try {
+      const response = await axiosInstance.post(`/user/action/interested/${userId}`);
+      if (response?.data?.success) {
+        moveToNextUser();
+      }
+    } catch (err) {
+      console.error("Interested failed:", err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const moveToNextUser = () => {
+    if (currentUserIndex < users.length - 1) {
+      setCurrentUserIndex(currentUserIndex + 1);
+    } else {
+      // Optionally refetch for more users
+      refetch();
+      setCurrentUserIndex(0);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="feed-container">
+        <div className="loading">Loading users...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="feed-container">
+        <div className="error">{error}</div>
+      </div>
+    );
+  }
+
+  if (!users || users.length === 0) {
+    return (
+      <div className="feed-container">
+        <div className="no-users">No users available at the moment</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="feed-container">
+      <div className="feed-content">
+        {currentUser && (
+          <UserCard
+            user={currentUser}
+            onIgnore={handleIgnore}
+            onInterested={handleInterested}
+          />
+        )}
+      </div>
+      {actionLoading && <div className="action-loading">Processing...</div>}
+    </div>
+  );
+};
+
+export default Feed;
