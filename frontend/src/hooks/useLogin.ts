@@ -16,7 +16,9 @@ const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axiosInstance.post("/auth/login", data);
+      const response = await axiosInstance.post("/auth/login", data, {
+        skipAuthRedirect: true, // Custom flag to skip auth interceptor for this request
+      });
       console.log("API Response:", response?.data);
       if (response?.data?.success) {
         console.log("Login successful");
