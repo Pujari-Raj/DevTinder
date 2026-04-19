@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     const config = error.config as CustomAxiosRequuestConfig;
 
-    // handling 401 errors
+    // handling 401 errors and redirecting to login if token is invalid or expired, but only if the request is not marked to skip auth redirect and is not the login endpoint itself
     if (
       error.response?.status === 401 &&
       !config?.skipAuthRedirect &&
