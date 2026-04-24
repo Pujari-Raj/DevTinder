@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { LoginSchema, type LoginSchemaType } from "../schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useLogin from "../hooks/useLogin";
+import FormError from "../components/FormError";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,21 +45,21 @@ export default function Login() {
                 <label className="label">
                   <span className="label-text text-white">Email Address</span>
                 </label>
-                <input
-                  type="email"
-                  {...register("email")}
-                  placeholder="you@example.com"
-                  className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                    errors.email ? "border-red-500" : ""
-                  }`}
-                />
-                {errors?.email && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.email?.message}
-                    </span>
-                  </label>
-                )}
+                <div className="relative">
+                  <input
+                    type="email"
+                    {...register("email")}
+                    placeholder="you@example.com"
+                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.email && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.email?.message} />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Password Field */}
@@ -75,25 +76,24 @@ export default function Login() {
                       errors.password ? "border-red-500" : ""
                     }`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
-                  >
-                    {showPassword ? (
-                      <IoEyeOff size={20} />
-                    ) : (
-                      <IoEye size={20} />
-                    )}
-                  </button>
+                  {errors.password ? (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.password?.message} />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
+                    >
+                      {showPassword ? (
+                        <IoEyeOff size={20} />
+                      ) : (
+                        <IoEye size={20} />
+                      )}
+                    </button>
+                  )}
                 </div>
-                {errors?.password && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.password?.message}
-                    </span>
-                  </label>
-                )}
               </div>
 
               {/* Remember Me */}
