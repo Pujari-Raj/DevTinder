@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { SignupSchema, type SignupSchemaType } from "../schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useSignUp from "../hooks/useSignup";
+import FormError from "../components/FormError";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +16,7 @@ export default function Signup() {
     defaultValues: {
       gender: "male"
     },
-    mode: "onChange"
+    mode: "onChange",
   })
   
   const { isloading, handleSignup, error } = useSignUp(reset);
@@ -52,21 +53,21 @@ export default function Signup() {
                 <label className="label">
                   <span className="label-text text-white">Full Name</span>
                 </label>
-                <input
-                  type="text"
-                  {...register("name")}
-                  placeholder="Name"
-                  className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                    errors.name ? "border-red-500" : ""
-                  }`}
-                />
-                {errors?.name && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.name?.message}
-                    </span>
-                  </label>
-                )}
+                <div className="relative">
+                  <input
+                    type="text"
+                    {...register("name")}
+                    placeholder="Name"
+                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors.name ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.name && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.name?.message} />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Email Field */}
@@ -74,21 +75,21 @@ export default function Signup() {
                 <label className="label">
                   <span className="label-text text-white">Email Address</span>
                 </label>
-                <input
-                  type="email"
-                  {...register("email")}
-                  placeholder="you@example.com"
-                  className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                    errors.email ? "border-red-500" : ""
-                  }`}
-                />
-                {errors?.email && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.email?.message}
-                    </span>
-                  </label>
-                )}
+                <div className="relative">
+                  <input
+                    type="email"
+                    {...register("email")}
+                    placeholder="you@example.com"
+                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.email && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.email?.message} />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Password Field */}
@@ -105,25 +106,24 @@ export default function Signup() {
                       errors.password ? "border-red-500" : ""
                     }`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
-                  >
-                    {showPassword ? (
-                      <IoEyeOff size={20} />
-                    ) : (
-                      <IoEye size={20} />
-                    )}
-                  </button>
+                  {errors.password ? (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.password?.message} />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
+                    >
+                      {showPassword ? (
+                        <IoEyeOff size={20} />
+                      ) : (
+                        <IoEye size={20} />
+                      )}
+                    </button>
+                  )}
                 </div>
-                {errors?.password && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.password?.message}
-                    </span>
-                  </label>
-                )}
               </div>
 
               {/* Age Field */}
@@ -131,22 +131,22 @@ export default function Signup() {
                 <label className="label">
                   <span className="label-text text-white">Age</span>
                 </label>
-                <input
-                  type="number"
-                  {...register("age")}
-                  placeholder="Age"
-                  min={18}
-                  className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                    errors.age ? "border-red-500" : ""
-                  }`}
-                />
-                {errors?.age && (
-                  <label className="label">
-                    <span className="label-text-alt text-red-500">
-                      {errors?.age?.message}
-                    </span>
-                  </label>
-                )}
+                <div className="relative">
+                  <input
+                    type="number"
+                    {...register("age")}
+                    placeholder="Age"
+                    min={18}
+                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors.age ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.age && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <FormError message={errors?.age?.message} />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Gender Field */}
