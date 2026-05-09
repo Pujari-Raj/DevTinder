@@ -5,12 +5,17 @@ import { Link } from "react-router-dom";
 import { LoginSchema, type LoginSchemaType } from "../schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useLogin from "../hooks/useLogin";
-import FormError from "../components/FormError";
+import TooltipMessage from "../components/common/TooltipMessage";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm<LoginSchemaType>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm<LoginSchemaType>({
     resolver: yupResolver(LoginSchema),
     mode: "onChange",
   });
@@ -42,44 +47,40 @@ export default function Login() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Email Field */}
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Email Address</span>
-                </label>
                 <div className="relative">
+                  <label className="label">
+                    <span className="label-text text-white">Email Address</span>
+                  </label>
                   <input
                     type="email"
                     {...register("email")}
                     placeholder="you@example.com"
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                      errors.email ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors?.email ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.email && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.email?.message} />
-                    </div>
+                  {errors?.email && (
+                    <TooltipMessage message={errors?.email?.message as string} />
                   )}
                 </div>
               </div>
 
               {/* Password Field */}
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Password</span>
-                </label>
                 <div className="relative">
+                  <label className="label">
+                    <span className="label-text text-white">Password</span>
+                  </label>
                   <input
                     type={showPassword ? "text" : "password"}
                     {...register("password")}
                     placeholder="••••••••"
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none pr-10 ${
-                      errors.password ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none pr-10 ${
+                      errors?.password ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.password ? (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.password?.message} />
-                    </div>
+                  {errors?.password ? (
+                    <TooltipMessage message={errors?.password?.message as string} />
                   ) : (
                     <button
                       type="button"
@@ -120,7 +121,10 @@ export default function Login() {
             {/* Sign Up Link */}
             <p className="text-center text-gray-400 mt-6">
               Not Registered Yet?{" "}
-              <Link to="/signup" className="text-sky-400 hover:text-sky-300 font-semibold">
+              <Link
+                to="/signup"
+                className="text-sky-400 hover:text-sky-300 font-semibold"
+              >
                 Sign Up
               </Link>
             </p>
@@ -130,4 +134,3 @@ export default function Login() {
     </div>
   );
 }
-

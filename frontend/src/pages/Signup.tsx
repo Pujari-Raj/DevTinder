@@ -5,27 +5,33 @@ import { Link } from "react-router-dom";
 import { SignupSchema, type SignupSchemaType } from "../schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useSignUp from "../hooks/useSignup";
-import FormError from "../components/FormError";
+import TooltipMessage from "../components/common/TooltipMessage";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
 
   // react hook form implementation
-  const { register, handleSubmit, watch, formState : {errors, isValid}, reset } = useForm<SignupSchemaType>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+    reset,
+  } = useForm<SignupSchemaType>({
     resolver: yupResolver(SignupSchema),
     defaultValues: {
-      gender: "male"
+      gender: "male",
     },
     mode: "onChange",
-  })
-  
+  });
+
   const { isloading, handleSignup, error } = useSignUp(reset);
 
   // const onSubmit : SubmitHandler<SignupSchemaType> = (data) => console.log('data',data);
   // console.log("errors",errors);
   // console.log("isValid",isValid);
-  
-  const onSubmit = async(data: SignupSchemaType) => {
+
+  const onSubmit = async (data: SignupSchemaType) => {
     await handleSignup(data);
   };
 
@@ -50,66 +56,60 @@ export default function Signup() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Name Field */}
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-white">Full Name</span>
-                </label>
                 <div className="relative">
+                  <label className="label">
+                    <span className="label-text text-white">Full Name</span>
+                  </label>
                   <input
                     type="text"
                     {...register("name")}
                     placeholder="Name"
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                      errors.name ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors?.name ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.name && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.name?.message} />
-                    </div>
+                  {errors?.name && (
+                    <TooltipMessage message={errors?.name?.message as string} />
                   )}
                 </div>
               </div>
 
               {/* Email Field */}
               <div className="form-control">
+                <div className="relative">
                 <label className="label">
                   <span className="label-text text-white">Email Address</span>
                 </label>
-                <div className="relative">
                   <input
                     type="email"
                     {...register("email")}
                     placeholder="you@example.com"
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                      errors.email ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors?.email ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.email && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.email?.message} />
-                    </div>
+                  {errors?.email && (
+                    <TooltipMessage message={errors?.email?.message as string} />
                   )}
                 </div>
               </div>
 
               {/* Password Field */}
               <div className="form-control">
+                <div className="relative">
                 <label className="label">
                   <span className="label-text text-white">Password</span>
                 </label>
-                <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     {...register("password")}
                     placeholder="••••••••"
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none pr-10 ${
-                      errors.password ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none pr-10 ${
+                      errors?.password ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.password ? (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.password?.message} />
-                    </div>
+                  {errors?.password ? (
+                    <TooltipMessage message={errors?.password?.message as string} />
                   ) : (
                     <button
                       type="button"
@@ -128,23 +128,21 @@ export default function Signup() {
 
               {/* Age Field */}
               <div className="form-control">
+                <div className="relative">
                 <label className="label">
                   <span className="label-text text-white">Age</span>
                 </label>
-                <div className="relative">
                   <input
                     type="number"
                     {...register("age")}
                     placeholder="Age"
                     min={18}
-                    className={`input input-bordered w-full bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
-                      errors.age ? "border-red-500" : ""
+                    className={`input input-bordered w-full h-12 bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-sky-500 focus:outline-none ${
+                      errors?.age ? "border-red-500" : ""
                     }`}
                   />
-                  {errors.age && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <FormError message={errors?.age?.message} />
-                    </div>
+                  {errors?.age && (
+                    <TooltipMessage message={errors?.age?.message as string} />
                   )}
                 </div>
               </div>
