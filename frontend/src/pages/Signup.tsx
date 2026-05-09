@@ -108,13 +108,10 @@ export default function Signup() {
                       errors?.password ? "border-red-500" : ""
                     }`}
                   />
-                  {errors?.password ? (
-                    <TooltipMessage message={errors?.password?.message as string} />
-                  ) : (
-                    <button
+                  <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
+                      className="absolute right-10 top-2/3 transform -translate-y-1/2 text-gray-400 hover:text-sky-400 transition"
                     >
                       {showPassword ? (
                         <IoEyeOff size={20} />
@@ -122,6 +119,8 @@ export default function Signup() {
                         <IoEye size={20} />
                       )}
                     </button>
+                  {errors?.password && (
+                    <TooltipMessage message={errors?.password?.message as string} />
                   )}
                 </div>
               </div>
