@@ -3,11 +3,12 @@
 import { Request, Response } from "express";
 import { ApiResponse } from "../@types/type";
 import { AsyncHandler } from "../utils/handlers";
-import { ConnectionRequestModal } from "../models/request.model";
+import { ConnectionRequestModel } from "../models/request.model";
 import { UserModel } from "../models/user.model";
 
 const USER_DATA = "name gender age photoUrl about skills";
 
+// Get user feed
 const userFeed = AsyncHandler(
   async (req: Request, res: Response<ApiResponse>) => {
     console.log("inside feed route");
@@ -21,7 +22,7 @@ const userFeed = AsyncHandler(
     const limit = parseInt(req.query.limit as string) || 10;
 
     // Get all users connected to loggedIn user
-    const allConnectedUsers = await ConnectionRequestModal.find({
+    const allConnectedUsers = await ConnectionRequestModel.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     });
 

@@ -36,4 +36,4 @@ const connectionRequestSchema : Schema<ConnectionRequest> = new Schema(
 
 connectionRequestSchema.index({senderId: 1, receiverId : 1});
 
-export const ConnectionRequestModal = models.ConnectionRequest || model<ConnectionRequest>("ConnectionRequest", connectionRequestSchema);
+export const ConnectionRequestModel = models.ConnectionRequest || model<ConnectionRequest>("ConnectionRequest", connectionRequestSchema);
