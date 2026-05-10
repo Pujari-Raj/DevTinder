@@ -9,6 +9,7 @@ import cors from 'cors';
 import { env } from "./config/config";
 import userRouter from "./routes/user.routes"
 import cookieParser from "cookie-parser";
+import requestRouter from "./routes/request.route";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(cors({ origin: env?.FRONTEND_URL, credentials: true, methods: ["GET", "P
 app.use("/api/v1/health", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/request", requestRouter)
 
 //  test route
 // app.use((_req, _res, next) => {
