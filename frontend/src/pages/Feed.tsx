@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useUserFeed } from "../hooks/useUserFeed";
 import UserCard from "../components/UserCard";
-import axiosInstance from "../utils/axiosInstance";
+import { sendConnectionRequest, sendIgnoreRequest } from "../services/requestService";
 import "./Feed.css";
 
 const Feed = () => {
@@ -17,8 +17,8 @@ const Feed = () => {
   const handleIgnore = async (userId: string) => {
     setActionLoading(true);
     try {
-      const response = await axiosInstance.post(`/user/action/ignore/${userId}`);
-      if (response?.data?.success) {
+      const response = await sendIgnoreRequest(userId);
+      if (response.success) {
         moveToNextUser();
       }
     } catch (err) {
@@ -31,8 +31,8 @@ const Feed = () => {
   const handleInterested = async (userId: string) => {
     setActionLoading(true);
     try {
-      const response = await axiosInstance.post(`/user/action/interested/${userId}`);
-      if (response?.data?.success) {
+      const response = await sendConnectionRequest(userId);
+      if (response.success) {
         moveToNextUser();
       }
     } catch (err) {
