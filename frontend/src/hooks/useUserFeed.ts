@@ -55,6 +55,25 @@ export const useUserFeed = (options: UseUserFeedOptions = {}) => {
     }
   }, [page, limit]);
 
+  const handleSendRequest = useCallback(
+    async (userId: string, status: "interested" | "ignored") => {
+      try {
+        console.log('userid',userId)
+        const response = await axiosInstance.post(
+          `/request/send/${status}/${userId}`
+        );
+        return {
+          success: response?.data?.success !== false,
+          message: response?.data?.message,
+        };
+      } catch (error) {
+        console.error(`Send ${status} request failed:`, error);
+        throw error;
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     fetchUserFeed();
   }, [fetchUserFeed]);
@@ -64,5 +83,6 @@ export const useUserFeed = (options: UseUserFeedOptions = {}) => {
     isLoading,
     error,
     refetch: fetchUserFeed,
+    handleSendRequest,
   };
 };
