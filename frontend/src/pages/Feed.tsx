@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useUserFeed } from "../hooks/useUserFeed";
 import UserCard from "../components/UserCard";
-import { sendConnectionRequest, sendIgnoreRequest } from "../services/requestService";
 import "./Feed.css";
 
 const Feed = () => {
-  const { users, isLoading, error, refetch } = useUserFeed({
+  const { users, isLoading, error, refetch, handleSendRequest } = useUserFeed({
     page: 1,
     limit: 10,
   });
@@ -17,7 +16,7 @@ const Feed = () => {
   const handleIgnore = async (userId: string) => {
     setActionLoading(true);
     try {
-      const response = await sendIgnoreRequest(userId);
+      const response = await handleSendRequest(userId, "ignored");
       if (response.success) {
         moveToNextUser();
       }
@@ -31,7 +30,7 @@ const Feed = () => {
   const handleInterested = async (userId: string) => {
     setActionLoading(true);
     try {
-      const response = await sendConnectionRequest(userId);
+      const response = await handleSendRequest(userId, "interested");
       if (response.success) {
         moveToNextUser();
       }
