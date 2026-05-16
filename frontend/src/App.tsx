@@ -10,6 +10,7 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import Feed from "./pages/Feed";
 import PublicRoute from "./components/Routes/PublicRoute";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { initializeAuth, isAuthenticated } = useAuthStore();
@@ -63,6 +64,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <Toaster/>
       </div>
     </BrowserRouter>
   );

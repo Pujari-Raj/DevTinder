@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,7 @@ const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
       });
       console.log("API Response:", response?.data);
       if (response?.data?.success) {
-        console.log("Login successful");
+        toast.success(response?.data?.message || "Login successful!");
         
         // Extract user from response (token is in HTTP-only cookie)
         const user = response?.data?.data;

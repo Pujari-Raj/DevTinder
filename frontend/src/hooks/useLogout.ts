@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 const useLogout = () => {
   const [error, setError] = useState<string | null>(null);
@@ -13,9 +14,9 @@ const useLogout = () => {
   const handleLogout = async () => {
     try {
         const response = await axiosInstance.post("/auth/logout");
-        console.log('logout response', response?.data);
-        
+                
         if(response?.data?.success){
+            toast.success(response?.data?.message || "Logout successful!");
             // logginng user out and navigating user back to login screen
             logout();
             navigate("/login", {replace: true})
@@ -26,9 +27,9 @@ const useLogout = () => {
         const errorMessage =
           err?.response?.data?.message ||
           err?.message ||
-          "Login failed. Please try again.";
+          "Logout failed. Please try again.";
         setError(errorMessage);
-        console.error("Login failed:", errorMessage);
+        console.error("Logout failed:", errorMessage);
       }
     }
   };

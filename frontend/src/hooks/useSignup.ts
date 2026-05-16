@@ -4,6 +4,7 @@ import type { SignupSchemaType } from "../schemas/authSchema";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import toast from "react-hot-toast";
 
 const useSignUp = (reset: UseFormReset<SignupSchemaType>) => {
   const [isloading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ const useSignUp = (reset: UseFormReset<SignupSchemaType>) => {
       const response = await axiosInstance.post("/auth/signup", data);
       console.log("API Response:", response?.data);
       if (response?.data?.success) {
-        console.log("Signup successful - redirecting to login");
+        toast.success(response?.data?.message || "Signup successful! Please login to continue.");
         
         // Signup successful but token is set on login endpoint only
         // User must manually login to get the token
