@@ -40,7 +40,7 @@ const signUp = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 
   res.status(201).json({
     success: true,
-    message: "User registered successfully",
+    message: "Signed Up Successfully",
     data: {
       name: createNewUser?.name,
       email: createNewUser?.email,
@@ -96,7 +96,7 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     .status(200)
     .json({
       success: true,
-      message: "Login Successful",
+      message: "Logged In Successfully",
       data: {
         name: userExists.name,
         email: userExists.email,
@@ -116,7 +116,7 @@ const logout = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     .status(200)
     .json({
       success: true,
-      message: "Logout Successful",
+      message: "Logged Out Successfully",
     });
 });
 
