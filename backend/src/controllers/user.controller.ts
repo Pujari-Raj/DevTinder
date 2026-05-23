@@ -11,8 +11,6 @@ const USER_DATA = "name gender age photoUrl about skills";
 // Get user feed
 const userFeed = AsyncHandler(
   async (req: Request, res: Response<ApiResponse>) => {
-    console.log("inside feed route");
-
     // Getting loggedIN user details
     const loggedInUser = req?.user;
     const loggedInUserId = req.user._id;
@@ -26,18 +24,11 @@ const userFeed = AsyncHandler(
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     });
 
-    console.log("Connected Users Count:", allConnectedUsers.length);
-    console.log("Connected Users:", allConnectedUsers);
-
     // excluding users
     const excludeIds = new Set<String>();
     excludeIds.add(loggedInUser?._id.toString());
 
-    console.log("ExcludeIds:", excludeIds);
-    console.log("LoggedInUserId:", loggedInUserId.toString());
-
     const allUsers = await UserModel.find();
-    console.log("Total users in DB:", allUsers.length);
 
     allConnectedUsers.forEach(({ senderId, receiverId }) => {
       excludeIds.add(senderId.toString());
@@ -59,8 +50,6 @@ const userFeed = AsyncHandler(
       },
     });
 
-    console.log("Filtered Users:", users.length);
-
     // Returning response
 
     res.status(200).json({
@@ -77,4 +66,68 @@ const userFeed = AsyncHandler(
   },
 );
 
-export { userFeed };
+// Get all connection request received to loggedIn user
+
+const fetchConnectionRequests = AsyncHandler(
+  async (req: Request, res: Response<ApiResponse>) => {
+    // getting loggedIn user data
+    const userData = req?.user;
+    const loggedInUserId = req?.user?._id;
+
+    const connectionRequestsReceived = await ConnectionRequestModel.find({
+      receiverId: loggedInUserId,
+      status: "interested",
+    })
+      .select("senderId")
+      .populate({ path: "senderId", select: USER_DATA });
+
+    // Returning response
+    res.status(200).json({
+      success: true,
+      message: "Connection Requests Feteched successfully",
+      data: connectionRequestsReceived,
+    });
+  },
+);
+
+// Get all connections of loggedIn user
+
+const fetchConnections = AsyncHandler(
+  async (req: Request, res: Response<ApiResponse>) => {
+    // getting loggedIn user data
+    const userData = req?.user;
+    const loggedInUserId = req?.user?._id;
+
+    const allConnections = await ConnectionRequestModel.find({
+      $or: [
+        {
+          senderId: loggedInUserId,
+          status: "accepted",
+        },
+        {
+          receiverId: loggedInUserId,
+          status: "accepted",
+        }
+      ],
+    }).populate([
+      {path : "senderId", select: USER_DATA},
+      {path : "receiverId", select: USER_DATA},
+    ]);
+
+    const allConnectionsFormattedData = allConnections.map(connection => {
+      if(String(connection.senderId._id) === String(loggedInUserId)) {
+        return connection.receiverId;
+      }
+      return connection.senderId;
+    });
+
+    //
+    res.status(200).json({
+      success: true,
+      message: "Connections Feteched successfully",
+      data: allConnectionsFormattedData,
+    })
+  },
+);
+
+export { userFeed, fetchConnectionRequests, fetchConnections };
