@@ -9,27 +9,20 @@ export const useReviewRequest = () => {
   const [error, setError] = useState<string | null>(null);
 
   const reviewRequest = useCallback(
-    async (userId: string, status: ReviewStatus) => {
+    async (requestId: string, status: ReviewStatus) => {
       setLoading(true);
       setError(null);
       try {
         const response = await axiosInstance.patch(
-          `/request/review/${status}/${userId}`,
-          {
-            // Include required fields if backend expects them
-            email: localStorage.getItem("userEmail") || "",
-            password: "", // Note: password should come from auth context, not stored
-          }
+          `/request/review/${status}/${requestId}`,
         );
 
         const successMessage = `Request ${status}!`;
-        toast.success(successMessage);
+        toast.success(response?.data?.message || successMessage);
         return response.data;
       } catch (err) {
         const errorMessage =
-          err instanceof Error
-            ? err.message
-            : `Failed to ${status} request`;
+          err instanceof Error ? err.message : `Failed to ${status} request`;
         setError(errorMessage);
         toast.error(errorMessage);
         throw err;
@@ -37,7 +30,7 @@ export const useReviewRequest = () => {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
   return {
