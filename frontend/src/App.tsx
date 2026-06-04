@@ -13,6 +13,7 @@ import PublicRoute from "./components/Routes/PublicRoute";
 import Requests from "./pages/Requests";
 import Connections from "./pages/Connections";
 import { Toaster } from "react-hot-toast";
+import Profile from "./pages/Profile";
 
 function App() {
   const { initializeAuth } = useAuthStore();
@@ -52,6 +53,16 @@ function App() {
             />
 
             {/* Protected Routes */}
+
+            <Route
+             path="/profile"
+             element = {
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+             }
+            />
+              
             <Route
               path="/feed"
               element={
