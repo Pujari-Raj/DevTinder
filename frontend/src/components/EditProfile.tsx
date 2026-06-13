@@ -1,6 +1,10 @@
 import type { User } from "../@types/types";
 
-const EditProfile = ({ userDetails } : { userDetails: User }) => {
+interface EditProfileProps {
+  userDetails: User | null;
+}
+
+const EditProfile = ({ userDetails } : EditProfileProps) => {
   return (
     <div className="w-full max-w-2xl bg-slate-900 rounded-xl p-8 shadow-lg">
       <h1 className="text-3xl font-bold mb-2">Edit Profile</h1>

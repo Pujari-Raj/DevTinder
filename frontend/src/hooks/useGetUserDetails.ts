@@ -1,40 +1,32 @@
 import { AxiosError } from "axios";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
+import type { User } from "../@types/types";
 
-export interface UserProfile {
-  _id: string;
-  name: string;
-  email: string;
-  age?: number;
-  gender?: string;
-  about?: string;
-  photoUrl?: string;
-}
 
 export interface UserProfileResponse {
     success: boolean;
     message: string;
-    data: UserProfile[];
+    data: User;
 }
 
 const useUserDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userDetails, setUserDetails] = useState<UserProfile[]>([]);
+  const [userDetails, setUserDetails] = useState<User | null>(null);
 
   const getDetails = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-        const response = await axiosInstance.get<UserProfileResponse>('');
+        const response = await axiosInstance.get<UserProfileResponse>('/profile/view');
 
         if (response?.data?.success) {
             setUserDetails(response?.data?.data)
         }
         else {
-            setError("ailed to fetch user details");
+            setError("Failed to fetch user details");
         }
 
     } catch (err) {
@@ -51,6 +43,7 @@ const useUserDetails = () => {
 
   return {
     getDetails,
+    userDetails,
     isLoading,
     error
   }

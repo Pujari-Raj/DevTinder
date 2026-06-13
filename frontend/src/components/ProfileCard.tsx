@@ -1,6 +1,10 @@
 import type { User } from "../@types/types";
 
-const ProfileCard = ({ userDetails } : { userDetails: User }) => {
+interface ProfileCardProps {
+  userDetails: User | null;
+}
+
+const ProfileCard = ({ userDetails } : ProfileCardProps) => {
   return (
     <div className="w-full lg:w-[350px]">
       <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
