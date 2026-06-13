@@ -1,6 +1,6 @@
-import React from "react";
+import type { User } from "../@types/types";
 
-const ProfileCard = () => {
+const ProfileCard = ({ userDetails } : { userDetails: User }) => {
   return (
     <div className="w-full lg:w-[350px]">
       <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-lg">
@@ -9,12 +9,14 @@ const ProfileCard = () => {
         </div>
 
         <div className="p-5">
-          <h2 className="text-2xl font-bold">Chandler Bing</h2>
+          <h2 className="text-2xl font-bold">{userDetails?.name}</h2>
 
-          <p className="text-gray-400 mb-3">25, Female</p>
+          <p className="text-gray-400 mb-3">
+            {userDetails?.age}, {userDetails?.gender}
+          </p>
 
           <p className="text-gray-300 mb-5">
-            This is the default about section.
+            {userDetails?.about || "This is the default about section."}
           </p>
 
           {/* <div className="flex gap-3">

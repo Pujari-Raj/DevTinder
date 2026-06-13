@@ -1,6 +1,6 @@
-import React from "react";
+import type { User } from "../@types/types";
 
-const EditProfile = () => {
+const EditProfile = ({ userDetails } : { userDetails: User }) => {
   return (
     <div className="w-full max-w-2xl bg-slate-900 rounded-xl p-8 shadow-lg">
       <h1 className="text-3xl font-bold mb-2">Edit Profile</h1>
@@ -16,6 +16,7 @@ const EditProfile = () => {
           placeholder="Enter name"
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500 cursor-not-allowed"
           disabled
+          value={userDetails?.name || ""}
         />
       </div>
 
@@ -27,6 +28,7 @@ const EditProfile = () => {
           placeholder="Enter email"
           disabled
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 opacity-70 cursor-not-allowed"
+          value={userDetails?.email || ""}
         />
       </div>
 
@@ -34,7 +36,7 @@ const EditProfile = () => {
       <div className="mb-6 flex gap-4 items-center">
         <div className="w-20 h-20 rounded-full border-2 border-indigo-500 overflow-hidden flex-shrink-0">
           <img
-            src="https://via.placeholder.com/150"
+            src={userDetails?.photoUrl || "https://via.placeholder.com/150"}
             alt="Profile"
             className="w-full h-full object-cover"
           />
@@ -59,12 +61,28 @@ const EditProfile = () => {
 
         <div className="flex gap-6">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="gender" />
+            <input
+              type="radio"
+              name="gender"
+              value="male"
+              checked={userDetails?.gender === "male"}
+              readOnly
+              className="radio border-gray-600 checked:bg-sky-500 checked:border-sky-500"
+              disabled
+            />
             Male
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="gender" />
+            <input
+              type="radio"
+              name="gender"
+              value="female"
+              checked={userDetails?.gender === "female"}
+              readOnly
+              className="radio border-gray-600 checked:bg-sky-500 checked:border-sky-500"
+              disabled
+            />
             Female
           </label>
         </div>
@@ -76,6 +94,7 @@ const EditProfile = () => {
         <input
           type="number"
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500"
+          value={userDetails?.age || ""}
         />
       </div>
 
@@ -87,6 +106,7 @@ const EditProfile = () => {
         <input
           type="text"
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500"
+          value={userDetails?.skills?.join(", ") || ""}
         />
       </div>
 
@@ -96,12 +116,13 @@ const EditProfile = () => {
         <textarea
           rows={5}
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 resize-none outline-none focus:border-indigo-500"
+          value={userDetails?.about || ""}
         />
       </div>
 
       {/* Button */}
       <div className="flex justify-end">
-        <button className="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-lg font-semibold">
+        <button className="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-lg font-semibold" disabled>
           Save Changes
         </button>
       </div>
