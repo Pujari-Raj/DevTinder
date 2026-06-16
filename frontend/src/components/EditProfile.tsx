@@ -1,10 +1,82 @@
+import { useEffect, useState } from "react";
 import type { User } from "../@types/types";
+import useEditProfile from "../hooks/useEditProfile";
 
 interface EditProfileProps {
   userDetails: User | null;
+  getDetails: () => Promise<void>;
 }
 
-const EditProfile = ({ userDetails } : EditProfileProps) => {
+const EditProfile = ({ userDetails, getDetails }: EditProfileProps) => {
+  const { handleEditProfile, isLoading } = useEditProfile();
+
+  const [formData, setFormData] = useState({
+    age: "",
+    photoUrl: "",
+    about: "",
+    skills: "",
+  });
+
+  useEffect(() => {
+    if (userDetails) {
+      setFormData({
+        age: String(userDetails.age ?? ""),
+        photoUrl: userDetails.photoUrl ?? "",
+        about: userDetails.about ?? "",
+        skills: userDetails.skills?.join(", ") ?? "",
+      });
+    }
+  }, [userDetails]);
+
+  const hasChanges =
+    userDetails &&
+    (formData.age !== String(userDetails.age ?? "") ||
+      formData.photoUrl !== (userDetails.photoUrl ?? "") ||
+      formData.about !== (userDetails.about ?? "") ||
+      formData.skills !== (userDetails.skills?.join(", ") ?? ""));
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const onSave = async () => {
+    if (!userDetails) return;
+
+    const payload: Record<string, any> = {};
+
+    if (formData.age !== String(userDetails.age ?? "")) {
+      payload.age = Number(formData.age);
+    }
+
+    if (formData.photoUrl !== (userDetails.photoUrl ?? "")) {
+      payload.photoUrl = formData.photoUrl;
+    }
+
+    if (formData.about !== (userDetails.about ?? "")) {
+      payload.about = formData.about;
+    }
+
+    if (formData.skills !== (userDetails.skills?.join(", ") ?? "")) {
+      payload.skills = formData.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean);
+    }
+    
+    const success = await handleEditProfile(payload);
+
+    if (success) {
+      await getDetails();
+    }
+  };
+
   return (
     <div className="w-full max-w-2xl bg-slate-900 rounded-xl p-8 shadow-lg">
       <h1 className="text-3xl font-bold mb-2">Edit Profile</h1>
@@ -40,7 +112,7 @@ const EditProfile = ({ userDetails } : EditProfileProps) => {
       <div className="mb-6 flex gap-4 items-center">
         <div className="w-20 h-20 rounded-full border-2 border-indigo-500 overflow-hidden flex-shrink-0">
           <img
-            src={userDetails?.photoUrl || "https://via.placeholder.com/150"}
+            src={formData?.photoUrl || "https://via.placeholder.com/150"}
             alt="Profile"
             className="w-full h-full object-cover"
           />
@@ -50,6 +122,9 @@ const EditProfile = ({ userDetails } : EditProfileProps) => {
           <label className="block text-gray-300 mb-2">Profile Photo URL</label>
           <input
             type="text"
+            name="photoUrl"
+            value={formData?.photoUrl}
+            onChange={handleChange}
             placeholder="Enter image URL"
             className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500"
           />
@@ -97,8 +172,10 @@ const EditProfile = ({ userDetails } : EditProfileProps) => {
         <label className="block text-gray-300 mb-2">Age</label>
         <input
           type="number"
+          name="age"
+          value={formData.age}
+          onChange={handleChange}
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500"
-          value={userDetails?.age || ""}
         />
       </div>
 
@@ -110,7 +187,9 @@ const EditProfile = ({ userDetails } : EditProfileProps) => {
         <input
           type="text"
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 outline-none focus:border-indigo-500"
-          value={userDetails?.skills?.join(", ") || ""}
+          name="skills"
+          value={formData.skills}
+          onChange={handleChange}
         />
       </div>
 
@@ -120,14 +199,20 @@ const EditProfile = ({ userDetails } : EditProfileProps) => {
         <textarea
           rows={5}
           className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 resize-none outline-none focus:border-indigo-500"
-          value={userDetails?.about || ""}
+          name="about"
+          value={formData.about}
+          onChange={handleChange}
         />
       </div>
 
       {/* Button */}
       <div className="flex justify-end">
-        <button className="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-lg font-semibold" disabled>
-          Save Changes
+        <button
+          onClick={onSave}
+          disabled={isLoading || !hasChanges}
+          className="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
+        >
+          {isLoading ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </div>

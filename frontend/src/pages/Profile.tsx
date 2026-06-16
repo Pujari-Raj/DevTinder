@@ -14,7 +14,7 @@ const Profile = () => {
     <div className="min-h-screen bg-black text-white py-10 px-4">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 items-start justify-center">
         {/* Left Section - Form */}
-        <EditProfile userDetails={userDetails} />
+        <EditProfile userDetails={userDetails} getDetails={getDetails} />
 
         {/* Right Section - Preview Card */}
         <ProfileCard userDetails={userDetails} />

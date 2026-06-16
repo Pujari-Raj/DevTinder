@@ -3,7 +3,6 @@ import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import type { User } from "../@types/types";
 
-
 export interface UserProfileResponse {
     success: boolean;
     message: string;
