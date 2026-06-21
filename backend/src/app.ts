@@ -11,6 +11,7 @@ import userRouter from "./routes/user.routes"
 import cookieParser from "cookie-parser";
 import requestRouter from "./routes/request.route";
 import profileRouter from "./routes/profile.route";
+import chatRouter from "./routes/chat.route";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/request", requestRouter);
 app.use("/api/v1/profile", profileRouter)
+app.use("/api/v1/chat", chatRouter);
 
 //  test route
 // app.use((_req, _res, next) => {
