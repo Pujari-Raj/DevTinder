@@ -1,7 +1,7 @@
-import { Document, Schema, model, models } from "mongoose";
+import { Document, Schema, Types, model, models } from "mongoose";
 
 export interface Chat extends Document {
-  participants: string[];
+  participants: Types.ObjectId[];
   lastMessage: string;
   lastMessageAt: Date | null;
 }

@@ -4,7 +4,7 @@ import { ApiResponse } from "../@types/type";
 import mongoose from "mongoose";
 import { UserModel } from "../models/user.model";
 import { ConnectionRequestModel } from "../models/request.model";
-import { ChatModel } from "../models/chat.model";
+import { Chat, ChatModel } from "../models/chat.model";
 import { MessageModel } from "../models/message.model";
 
 // send Message
@@ -140,11 +140,85 @@ const sendMessage = AsyncHandler(
   },
 );
 
-// get Message By chatId
-
+// Get Messages By Chat Id
 const getMessagesByChatId = AsyncHandler(
   async (req: Request, res: Response<ApiResponse>) => {
-    // getting loggedIn user data
+    /**
+     * -------------------------
+     * GET REQUEST DATA
+     * -------------------------
+     */
+    const loggedInUser = req.user;
+    const { chatId } = req.params;
+
+    console.log("Chat Id:", chatId);
+    console.log("Logged In User:", loggedInUser?._id);
+
+    /**
+     * -------------------------
+     * VALIDATIONS
+     * -------------------------
+     */
+
+    if (!chatId) {
+      throw new ErrorHandler("Chat Id is required", 400);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(chatId)) {
+      throw new ErrorHandler("Invalid Chat Id", 400);
+    }
+
+    /**
+     * -------------------------
+     * CHECK CHAT EXISTS
+     * -------------------------
+     */
+
+    const chat = await ChatModel.findById(chatId) as Chat | null;
+
+    if (!chat) {
+      throw new ErrorHandler("Chat not found", 404);
+    }
+
+    /**
+     * -------------------------
+     * AUTHORIZATION
+     * -------------------------
+     * Logged-in user should be one of the
+     * participants of this chat.
+     */
+
+    const isParticipant = chat.participants.some(
+      (participant) => participant.toString() === loggedInUser._id.toString(),
+    );
+
+    if (!isParticipant) {
+      throw new ErrorHandler("Unauthorized access to this chat", 403);
+    }
+
+    /**
+     * -------------------------
+     * FETCH MESSAGES
+     * -------------------------
+     */
+
+    const messages = await MessageModel.find({
+      chatId,
+    })
+      .sort({ createdAt: 1 })
+      .lean();
+
+    /**
+     * -------------------------
+     * SUCCESS RESPONSE
+     * -------------------------
+     */
+
+    return res.status(200).json({
+      success: true,
+      message: "Messages fetched successfully.",
+      data: messages,
+    });
   },
 );
 
@@ -156,4 +230,36 @@ const getAllMessages = AsyncHandler(
   },
 );
 
-export { sendMessage, getMessagesByChatId, getAllMessages };
+const getUserChats = AsyncHandler(
+  async (req: Request, res: Response<ApiResponse>) => {
+    const loggedInUser = req.user;
+
+    const chats = await ChatModel.find({
+      participants: loggedInUser._id,
+    })
+      .populate("participants", "name photoUrl")
+      .sort({ lastMessageAt: -1 })
+      .lean();
+
+    const formattedChats = chats.map((chat) => {
+      const participant = chat.participants.find(
+        (user: any) => user._id.toString() !== loggedInUser._id.toString()
+      );
+
+      return {
+        chatId: chat._id,
+        participant,
+        lastMessage: chat.lastMessage,
+        lastMessageAt: chat.lastMessageAt,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Chats fetched successfully.",
+      data: formattedChats,
+    });
+  }
+);
+
+export { sendMessage, getMessagesByChatId, getAllMessages, getUserChats };
