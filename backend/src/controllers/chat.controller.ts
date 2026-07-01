@@ -117,6 +117,7 @@ const sendMessage = AsyncHandler(
 
     chat.lastMessage = message.text;
     chat.lastMessageAt = new Date();
+    chat.lastMessageSenderId = loggedInUser?._id;
 
     await chat.save();
 
@@ -251,6 +252,8 @@ const getUserChats = AsyncHandler(
         participant,
         lastMessage: chat.lastMessage,
         lastMessageAt: chat.lastMessageAt,
+        lastMessageSenderId: chat.lastMessageSenderId,
+        isLastMessageSentByLoggedInUser: chat.lastMessageSenderId?.toString() === loggedInUser._id.toString(),
       };
     });
 

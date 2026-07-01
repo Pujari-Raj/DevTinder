@@ -4,6 +4,7 @@ export interface Chat extends Document {
   participants: Types.ObjectId[];
   lastMessage: string;
   lastMessageAt: Date | null;
+  lastMessageSenderId: Types.ObjectId | null;
 }
 
 const chatSchema: Schema<Chat> = new Schema(
@@ -20,9 +21,13 @@ const chatSchema: Schema<Chat> = new Schema(
       type: String,
       default: "",
     },
-
     lastMessageAt: {
       type: Date,
+      default: null,
+    },
+    lastMessageSenderId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       default: null,
     },
   },
