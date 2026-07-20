@@ -6,6 +6,6 @@ const chatRouter = Router();
 
 chatRouter.post("/send/:receiverId", userAuth, sendMessage);
 chatRouter.get("/messages/:chatId", userAuth, getMessagesByChatId);
-chatRouter.get("/all", userAuth, getUserChats);
+chatRouter.get("/allChats", userAuth, getUserChats);
 
 export default chatRouter;
