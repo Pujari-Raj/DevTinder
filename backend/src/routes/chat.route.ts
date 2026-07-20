@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { userAuth } from '../middlewares/auth.middleware';
-import { sendMessage, getMessagesByChatId, getAllMessages, getUserChats } from '../controllers/chat.controller';
+import { sendMessage, getMessagesByChatId, getUserChats } from '../controllers/chat.controller';
 
 const chatRouter = Router();
 

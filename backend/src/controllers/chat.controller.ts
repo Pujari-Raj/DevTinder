@@ -224,13 +224,6 @@ const getMessagesByChatId = AsyncHandler(
 );
 
 // get All Messages of loggedIn user
-
-const getAllMessages = AsyncHandler(
-  async (req: Request, res: Response<ApiResponse>) => {
-    // getting loggedIn user data
-  },
-);
-
 const getUserChats = AsyncHandler(
   async (req: Request, res: Response<ApiResponse>) => {
     const loggedInUser = req.user;
@@ -265,4 +258,4 @@ const getUserChats = AsyncHandler(
   }
 );
 
-export { sendMessage, getMessagesByChatId, getAllMessages, getUserChats };
+export { sendMessage, getMessagesByChatId, getUserChats };
