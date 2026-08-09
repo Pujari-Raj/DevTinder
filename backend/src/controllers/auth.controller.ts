@@ -98,6 +98,7 @@ const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
       success: true,
       message: "Logged In Successfully",
       data: {
+        _id: userExists._id,
         name: userExists.name,
         email: userExists.email,
       },
